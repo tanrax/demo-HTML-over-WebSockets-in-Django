@@ -1,0 +1,10 @@
+# Django
+django
+# Servidor para Django
+daphne==2.4.1
+# Conector para PostgreSQL
+psycopg2-binary
+# Channels
+channels==2.4.0
+# Conector de Redis para Channels
+channels_redis

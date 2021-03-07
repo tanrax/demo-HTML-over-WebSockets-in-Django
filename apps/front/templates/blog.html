@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="es">
+    <head>
+        <meta charset="UTF-8"/>
+        <title>Chat</title>
+        <!-- Spectre CSS -->
+        <link rel="stylesheet" href="https://unpkg.com/spectre.css/dist/spectre.min.css">
+    </head>
+    <body>
+        <div class="container grid-md">
+            <h1 class="mt-2 text-center">Chat con Django</h1>
+            <div class="columns">
+                <aside class="column col-4">
+
+                    <!-- Configurar alias -->
+                    <div class="form-group">
+                        <label class="form-label">
+                            Nombre
+                            <input id="nombre" class="form-input" type="text" placeholder="Oveja programadora...">
+                        </label>
+                    </div>
+                    <!-- Fin Configurar alias -->
+
+                </aside>
+                <main class="column">
+
+                    <!-- Mensajes -->
+                    <section id="mensajes"></section>
+                    <!-- Fin Mensajes -->
+
+                    <!-- Enviar mensajes -->
+                    <section class="form-group">
+                        <input id="texto" class="form-input" type="text" placeholder="Nuevo mensaje...">
+                        <button id="enviar" class="btn btn-block">Enviar</button>
+                    </section>
+                    <!-- Fin Enviar mensajes -->
+                </main>
+            </div>
+        </div>
+        <script>
+         /*
+          * VARIABLES
+          */
+         // Define el nombre de la sala
+         const SALA_CHAT = 'python';
+         // Conecta con WebSockets
+         const CHAT_SOCKET = new WebSocket('ws://localhost:8000/ws/chat/' + SALA_CHAT + '/');
+         // Captura el campo con el nombre del usuario
+         const CAMPO_NOMBRE = document.querySelector('#nombre');
+         // Captura el contenedor que posee todos los mensajes
+         const MENSAJES = document.querySelector('#mensajes');
+         // Captura el campo con el nuevo texto
+         const CAMPO_TEXTO = document.querySelector('#texto');
+         // Boton para enviar mensaje
+         const BOTON_ENVIAR = document.querySelector('#enviar');
+
+         /*
+          * FUNCIONES
+          */
+
+         /**
+          * Método que añade un nuevo mensaje en el HTML (#mensajes)
+          */
+         function anyadirNuevoMensajeAlHTML(nombre, texto, propio = false) {
+             // Contenedor
+             const MI_CONTENEDOR = document.createElement('div');
+             MI_CONTENEDOR.classList.add(propio ? 'bg-primary' : 'bg-secondary', 'p-2');
+             // Nombre
+             const MI_NOMBRE = document.createElement('h2');
+             MI_NOMBRE.classList.add('text-tiny', 'text-bold', 'mt-2');
+             MI_NOMBRE.textContent = nombre;
+             MI_CONTENEDOR.appendChild(MI_NOMBRE);
+             // Texto
+             const MI_TEXTO = document.createElement('p');
+             MI_TEXTO.classList.add('my-2');
+             MI_TEXTO.textContent = texto;
+             MI_CONTENEDOR.appendChild(MI_TEXTO);
+             // Anyade todo a MENSAJES
+             MENSAJES.appendChild(MI_CONTENEDOR);
+         }
+
+         /**
+          * Método que envia el mensaje al consumer por medio de WebSockets
+          */
+         function enviarNuevoMensaje() {
+             // Envia al WebSocket un nuevo mensaje
+             CHAT_SOCKET.send(JSON.stringify({
+                 name: CAMPO_NOMBRE.value,
+                 text: CAMPO_TEXTO.value,
+                 createdAt: Date.now()
+             }));
+             // Limpiamos el campo donde hemos escrito
+             CAMPO_TEXTO.value = '';
+             // Le volvemos a dar el foco para escribir otro mensaje
+             CAMPO_TEXTO.focus();
+         }
+
+         /*
+          * EVENTOS
+          */
+
+         // Conectado
+         CHAT_SOCKET.addEventListener('open', () => {
+             console.log('Conectado');
+         });
+         // Desconectado
+         CHAT_SOCKET.addEventListener('close', () => {
+              console.log('Desconectado');
+          });
+
+         // Recibir mensaje
+         CHAT_SOCKET.addEventListener('message', (event) => {
+             console.log('Recibido nuevo mensaje');
+             const MI_NUEVA_DATA = JSON.parse(event.data);
+             anyadirNuevoMensajeAlHTML(MI_NUEVA_DATA.name, MI_NUEVA_DATA.text, MI_NUEVA_DATA.name === CAMPO_NOMBRE.value);
+          });
+
+         // Enviar mensaje cuando se pulsa en el botón Enviar
+         BOTON_ENVIAR.addEventListener('click', enviarNuevoMensaje);
+
+         // Enviar mensaje cuando se pulsa en el teclado Enter
+         CAMPO_TEXTO.addEventListener('keyup', (e) => e.keyCode === 13 ? enviarNuevoMensaje() : false);
+        </script>
+    </body>
+</html>
