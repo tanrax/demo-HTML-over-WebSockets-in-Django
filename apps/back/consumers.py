@@ -1,8 +1,7 @@
 import json
 from channels.generic.websocket import AsyncWebsocketConsumer
-from asgiref.sync import sync_to_async
 
-class BackConsumer(AsyncWebsocketConsumer):
+class BlogConsumer(AsyncWebsocketConsumer):
 
     def connect(self):
         ''' Cliente se conecta '''
@@ -12,15 +11,15 @@ class BackConsumer(AsyncWebsocketConsumer):
         self.room_group_name = "blog_%s" % self.room_name
 
         # Se une a la sala
-        await self.channel_layer.group_add(self.room_group_name, self.channel_name)
+        self.channel_layer.group_add(self.room_group_name, self.channel_name)
 
         # Informa al cliente del éxito
-        await self.accept()
+        self.accept()
 
     def disconnect(self, close_code):
         ''' Cliente se desconecta '''
         # Leave room group
-        await self.channel_layer.group_discard(self.room_group_name, self.channel_name)
+        self.channel_layer.group_discard(self.room_group_name, self.channel_name)
 
     def receive(self, text_data):
         ''' Cliente envía información y nosotros la recibimos '''
@@ -29,7 +28,7 @@ class BackConsumer(AsyncWebsocketConsumer):
         text = text_data_json["text"]
 
         # Enviamos el mensaje a la sala
-        await self.channel_layer.group_send(
+        self.channel_layer.group_send(
             self.room_group_name,
             {
                 "type": "chat_message",
@@ -44,7 +43,7 @@ class BackConsumer(AsyncWebsocketConsumer):
         text = event["text"]
 
         # Send message to WebSocket
-        await self.send(
+        self.send(
             text_data=json.dumps(
                 {
                     "type": "chat_message",
