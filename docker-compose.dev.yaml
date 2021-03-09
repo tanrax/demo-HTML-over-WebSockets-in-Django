@@ -2,17 +2,6 @@ version: '3.1'
 
 services:
 
-  db:
-    image: postgres
-    restart: always
-    volumes:
-      - ./../postgres_data:/var/lib/postgresql/data
-    environment:
-      POSTGRES_DB: demo
-      POSTGRES_PASSWORD: postgres
-    expose:
-      - 5432
-
   django:
     build:
       context: .
@@ -25,19 +14,12 @@ services:
       DEBUG: "True"
       ALLOWED_HOSTS: "localhost"
       SECRET_KEY: "mysecret"
-      DB_HOST: db
-      DB_NAME: "demo"
-      DB_USER: "postgres"
-      DB_PASSWORD: "postgres"
-      DB_PORT: "5432"
-      DOMAIN: "localhost"
-      DOMAIN_URL: "http://localhost"
+      DOMAIN: "my-demo.localhost"
+      DOMAIN_URL: "http://my-demo.localhost"
       STATIC_URL: "/static/"
       MEDIA_URL: "/media/"
     expose:
       - 8000
-    depends_on:
-      - db
 
   redis:
     image: redis:alpine
@@ -56,7 +38,7 @@ services:
         - 443:443
     volumes:
         - ./Caddyfile:/etc/caddy/Caddyfile
-        - ./../caddy_data:/data
+        - ./caddy_data:/data
         - .:/usr/src/app/
     depends_on:
       - django
