@@ -1,4 +1,7 @@
 from django.shortcuts import render
+import uuid
 
-def blog(request):
-    return render(request, 'blog.html')
+def all_articles(request):
+    return render(request, 'layouts/main.html', {
+        "CHANNEL": uuid.uuid4().hex[:20].upper()
+        })

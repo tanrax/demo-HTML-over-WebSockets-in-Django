@@ -1,11 +1,12 @@
 import json
-from channels.generic.websocket import AsyncWebsocketConsumer
+from channels.generic.websocket import WebsocketConsumer
+from django.template.loader import render_to_string
 
-class BlogConsumer(AsyncWebsocketConsumer):
+class BlogConsumer(WebsocketConsumer):
 
     def connect(self):
         ''' Cliente se conecta '''
-
+        print('cooooooooooooonectando')
         # Recoge el nombre de la sala
         self.room_name = self.scope["url_route"]["kwargs"]["room_name"]
         self.room_group_name = "blog_%s" % self.room_name
@@ -15,6 +16,17 @@ class BlogConsumer(AsyncWebsocketConsumer):
 
         # Informa al cliente del éxito
         self.accept()
+
+        # Send message to WebSocket
+        self.send(
+            text_data=json.dumps(
+                {
+                    "selector": "#articles",
+                    "position": "appendChild",
+                    "html": render_to_string('blog/articles.html', {'pag': 1})
+                }
+            )
+        )
 
     def disconnect(self, close_code):
         ''' Cliente se desconecta '''

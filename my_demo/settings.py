@@ -120,7 +120,7 @@ USE_TZ = True
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
-ASGI_APPLICATION = "asgi.application"
+ASGI_APPLICATION = "my_demo.asgi.application"
 
 CHANNEL_LAYERS = {
     "default": {

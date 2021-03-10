@@ -19,5 +19,5 @@ from apps.front import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', views.blog),
+    path('', views.all_articles),
 ]
