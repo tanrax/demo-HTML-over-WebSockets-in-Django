@@ -12,7 +12,7 @@ services:
       - .:/usr/src/app/
     environment:
       DEBUG: "True"
-      ALLOWED_HOSTS: "localhost"
+      ALLOWED_HOSTS: "localhost,my-demo.localhost"
       SECRET_KEY: "mysecret"
       DOMAIN: "my-demo.localhost"
       DOMAIN_URL: "http://my-demo.localhost"
