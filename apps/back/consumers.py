@@ -1,12 +1,12 @@
 import json
 from channels.generic.websocket import WebsocketConsumer
 from django.template.loader import render_to_string
+from apps.back.models import Post
 
 class BlogConsumer(WebsocketConsumer):
 
     def connect(self):
         ''' Cliente se conecta '''
-        print('cooooooooooooonectando')
         # Recoge el nombre de la sala
         self.room_name = self.scope["url_route"]["kwargs"]["room_name"]
         self.room_group_name = "blog_%s" % self.room_name
@@ -17,17 +17,6 @@ class BlogConsumer(WebsocketConsumer):
         # Informa al cliente del éxito
         self.accept()
 
-        # Send message to WebSocket
-        self.send(
-            text_data=json.dumps(
-                {
-                    "selector": "#articles",
-                    "position": "appendChild",
-                    "html": render_to_string('blog/articles.html', {'pag': 1})
-                }
-            )
-        )
-
     def disconnect(self, close_code):
         ''' Cliente se desconecta '''
         # Leave room group
@@ -36,31 +25,23 @@ class BlogConsumer(WebsocketConsumer):
     def receive(self, text_data):
         ''' Cliente envía información y nosotros la recibimos '''
         text_data_json = json.loads(text_data)
-        name = text_data_json["name"]
-        text = text_data_json["text"]
+        selector = text_data_json["selector"]
+        template = text_data_json["template"]
+        data = text_data_json["data"]
 
-        # Enviamos el mensaje a la sala
-        self.channel_layer.group_send(
-            self.room_group_name,
-            {
-                "type": "chat_message",
-                "name": name,
-                "text": text
-            }
-        )
+        # Database
+        if template == "partials/blog/all_articles.html":
+            data["posts"] = Post.objects.all()[:5]
 
-    def chat_message(self, event):
-        ''' Recibimos información de la sala '''
-        name = event["name"]
-        text = event["text"]
+        if template == "partials/blog/single.html":
+            data["post"] = Post.objects.get(data['id'])
 
         # Send message to WebSocket
         self.send(
             text_data=json.dumps(
                 {
-                    "type": "chat_message",
-                    "name": name,
-                    "text": text
+                    "selector": selector,
+                    "html": render_to_string(template, data)
                 }
             )
         )

@@ -13,9 +13,6 @@ class Post(models.Model):
     status = models.IntegerField(choices=STATUS, default=0)
     created_on = models.DateTimeField(auto_now_add=True)
 
-    class Meta:
-        ordering = ['-created_on']
-
     def __str__(self):
         return self.title
 
@@ -24,9 +21,6 @@ class Comment(models.Model):
     body = models.CharField(max_length=128)
     post = models.ForeignKey(Post, on_delete= models.CASCADE)
     created_on = models.DateTimeField(auto_now_add=True)
-
-    class Meta:
-        ordering = ['-created_on']
 
     def __str__(self):
         return self.name

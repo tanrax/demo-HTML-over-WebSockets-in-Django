@@ -14,42 +14,85 @@
             <link rel="stylesheet" href="https://unpkg.com/spectre.css/dist/spectre-icons.min.css">
         </head>
     <body>
-        <nav id="nav">
-            <ul class="nav">
-                <li class="nav-item">
-                    <a href="#">All</a>
-                </li>
-                <li class="nav-item">
-                    <a href="#">About</a>
-                </li>
-            </ul>
-        </nav>
-        <main id="main"></main>
+        <div class="container">
+            <nav id="nav">
+                <ul class="tab tab-block">
+                    <li class="tab-item">
+                        <a id="link-all" href="#">All</a>
+                    </li>
+                    <li class="tab-item">
+                        <a id="link-about" href="#">About</a>
+                    </li>
+                </ul>
+            </nav>
+            <main id="main">
+                <div id="articles">
+                    {% for post in posts %}
+                    <article>
+                        <h2>{{ post.title }}</h2>
+                        <p>Author: {{ post.author }}</p>
+                        <p><button class="btn">More</button></p>
+                        <hr>
+                    </article>
+                    {% endfor %}
+                </div>
+                <ul class="pagination">
+                      <li class="page-item disabled">
+                            <a href="#" tabindex="-1">Previous</a>
+                      </li>
+                      <li class="page-item">
+                            <a href="#">Next</a>
+                      </li>
+                </ul>
+            </main>
+        </div>
         <script>
-            const CHAT_SOCKET = new WebSocket('ws://my-demo.localhost/ws/blog/{{ CHANNEL}}/');
+            document.$CHAT_SOCKET = new WebSocket('ws://my-demo.localhost/ws/blog/{{ CHANNEL}}/');
 
               // Conectado
-             CHAT_SOCKET.addEventListener('open', () => {
-                 console.log('Conectado');
+             document.$CHAT_SOCKET.addEventListener('open', () => {
+                 console.log('Connect');
              });
              // Desconectado
-             CHAT_SOCKET.addEventListener('close', () => {
-                  console.log('Desconectado');
+             document.$CHAT_SOCKET.addEventListener('close', () => {
+                  console.log('Disconnect');
               });
 
-             // Recibir mensaje
-             CHAT_SOCKET.addEventListener('message', (event) => {
-                 console.log('Recibido nuevo mensaje');
-                 const MI_NUEVA_DATA = JSON.parse(event.data);
+             // Recibir mensaje y dibujar
+             document.$CHAT_SOCKET.addEventListener('message', (event) => {
+                 console.log('New HTML');
+                 const NEW_DATA = JSON.parse(event.data);
+                 //document.querySelector(NEW_DATA.selector).innerHTML = NEW_DATA.html;
+
+
+                const rangeHTML = document.createRange().createContextualFragment(NEW_DATA.html);
+                 document.querySelector(NEW_DATA.selector).innerHTML = '';
+                 document.querySelector(NEW_DATA.selector).appendChild(rangeHTML);
+
+
+                 console.log(rangeHTML)
             });
 
-             // Desconectado
-             CHAT_SOCKET.addEventListener('error', (event) => {
-                  console.log('error');
-                  console.log(event)
-              });
 
+            document.querySelector('#link-about').addEventListener('click', (event) => {
 
+                event.preventDefault();
+                document.$CHAT_SOCKET.send(JSON.stringify({
+                    selector: "#main",
+                    template: "partials/website/about.html",
+                    data: {}
+                }));
+             });
+
+            document.querySelector('#link-all').addEventListener('click', (event) => {
+
+                event.preventDefault();
+                document.$CHAT_SOCKET.send(JSON.stringify({
+                    selector: "#main",
+                    template: "partials/blog/all_articles.html",
+                    data: {}
+                }));
+             });
         </script>
     </body>
 </html>

@@ -1,0 +1,34 @@
+<div id="articles">
+    {% for post in posts %}
+    <article>
+        <h2>{{ post.title }}</h2>
+        <p>Author: {{ post.author }}</p>
+        <p><button data-id="{{ post.id }}" class="btn">More</button></p>
+        <hr>
+    </article>
+    {% endfor %}
+</div>
+<ul class="pagination">
+      <li class="page-item disabled">
+            <a href="#" tabindex="-1">Previous</a>
+      </li>
+      <li class="page-item">
+            <a href="#">Next</a>
+      </li>
+</ul>
+
+<script>
+    const buttons = document.querySelectorAll('.btn');
+
+    buttons.forEach((button) => {
+        button.addEventListener('click', event => {
+            document.$CHAT_SOCKET.send(JSON.stringify({
+                selector: "#main",
+                template: "partials/blog/single.html",
+                data: {
+                    id: event.target.dataset.id
+                }
+            }))
+        });
+    });
+</script>
