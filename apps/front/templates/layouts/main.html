@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+            <meta charset="utf-8">
+            <title>DEMO Websocket over HTML</title>
+            <link rel="icon" type="image/png" href="favicon.png">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+            <meta name="author" content="Andros Fenollosa">
+            <meta name="generator" content="Django">
+            <meta name="keywords" content="html, css, javascript">
+            <meta name="description" content="my description...">
+            <link rel="stylesheet" href="https://unpkg.com/spectre.css/dist/spectre.min.css">
+            <link rel="stylesheet" href="https://unpkg.com/spectre.css/dist/spectre-exp.min.css">
+            <link rel="stylesheet" href="https://unpkg.com/spectre.css/dist/spectre-icons.min.css">
+        </head>
+    <body>
+        <nav id="nav">
+            <ul class="nav">
+                <li class="nav-item">
+                    <a href="#">All</a>
+                </li>
+                <li class="nav-item">
+                    <a href="#">About</a>
+                </li>
+            </ul>
+        </nav>
+        <main id="main"></main>
+        <script>
+            const CHAT_SOCKET = new WebSocket('ws://my-demo.localhost/ws/blog/{{ CHANNEL}}/');
+
+              // Conectado
+             CHAT_SOCKET.addEventListener('open', () => {
+                 console.log('Conectado');
+             });
+             // Desconectado
+             CHAT_SOCKET.addEventListener('close', () => {
+                  console.log('Desconectado');
+              });
+
+             // Recibir mensaje
+             CHAT_SOCKET.addEventListener('message', (event) => {
+                 console.log('Recibido nuevo mensaje');
+                 const MI_NUEVA_DATA = JSON.parse(event.data);
+            });
+
+             // Desconectado
+             CHAT_SOCKET.addEventListener('error', (event) => {
+                  console.log('error');
+                  console.log(event)
+              });
+
+
+        </script>
+    </body>
+</html>
