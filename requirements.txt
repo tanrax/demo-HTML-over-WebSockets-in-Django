@@ -2,6 +2,7 @@
 django
 # ASGI server
 uvicorn
+websockets
 # Connect PostgreSQL
 psycopg2-binary
 # Channels
