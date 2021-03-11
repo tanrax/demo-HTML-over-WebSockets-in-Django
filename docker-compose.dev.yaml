@@ -18,16 +18,17 @@ services:
       DOMAIN_URL: "http://my-demo.localhost"
       STATIC_URL: "/static/"
       MEDIA_URL: "/media/"
+      REDIS_URL: redis
     expose:
       - 8000
+    depends_on:
+      - redis
 
   redis:
     image: redis:alpine
     restart: always
     expose:
       - 6379
-    depends_on:
-      - django
 
 
   caddy:
