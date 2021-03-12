@@ -7,20 +7,11 @@ class BlogConsumer(WebsocketConsumer):
 
     def connect(self):
         ''' Cliente se conecta '''
-        # Recoge el nombre de la sala
-        self.room_name = self.scope["url_route"]["kwargs"]["room_name"]
-        self.room_group_name = "blog_%s" % self.room_name
-
-        # Se une a la sala
-        self.channel_layer.group_add(self.room_group_name, self.channel_name)
-
-        # Informa al cliente del éxito
         self.accept()
 
     def disconnect(self, close_code):
         ''' Cliente se desconecta '''
-        # Leave room group
-        self.channel_layer.group_discard(self.room_group_name, self.channel_name)
+        pass
 
     def receive(self, text_data):
         ''' Cliente envía información y nosotros la recibimos '''
@@ -39,7 +30,7 @@ class BlogConsumer(WebsocketConsumer):
             data['pag'] = pag
 
         if template == "partials/blog/single.html":
-            data["post"] = Post.objects.get(data['id'])
+            data["post"] = Post.objects.get(pk=data['id'])
 
         # Send message to WebSocket
         self.send(
