@@ -5,5 +5,6 @@ import uuid
 def all_articles(request):
     return render(request, 'layouts/main.html', {
         "CHANNEL": uuid.uuid4().hex[:20].upper(),
-        "posts": Post.objects.all()[:5]
+        "posts": Post.objects.all()[:3],
+        "pag": 1
         })

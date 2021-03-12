@@ -31,7 +31,12 @@ class BlogConsumer(WebsocketConsumer):
 
         # Database
         if template == "partials/blog/all_articles.html":
-            data["posts"] = Post.objects.all()[:5]
+            pag = data['pag'] if 'pag' in data else 1
+            amount = 3
+            start = pag - 1
+            end = start + amount
+            data["posts"] = Post.objects.all()[start:end]
+            data['pag'] = pag
 
         if template == "partials/blog/single.html":
             data["post"] = Post.objects.get(data['id'])

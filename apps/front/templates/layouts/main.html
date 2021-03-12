@@ -26,24 +26,7 @@
                 </ul>
             </nav>
             <main id="main">
-                <div id="articles">
-                    {% for post in posts %}
-                    <article>
-                        <h2>{{ post.title }}</h2>
-                        <p>Author: {{ post.author }}</p>
-                        <p><button class="btn">More</button></p>
-                        <hr>
-                    </article>
-                    {% endfor %}
-                </div>
-                <ul class="pagination">
-                      <li class="page-item disabled">
-                            <a href="#" tabindex="-1">Previous</a>
-                      </li>
-                      <li class="page-item">
-                            <a href="#">Next</a>
-                      </li>
-                </ul>
+                {% include 'partials/blog/all_articles.html' %}
             </main>
         </div>
         <script>
@@ -60,17 +43,10 @@
 
              // Recibir mensaje y dibujar
              document.$CHAT_SOCKET.addEventListener('message', (event) => {
-                 console.log('New HTML');
-                 const NEW_DATA = JSON.parse(event.data);
-                 //document.querySelector(NEW_DATA.selector).innerHTML = NEW_DATA.html;
-
-
+                const NEW_DATA = JSON.parse(event.data);
                 const rangeHTML = document.createRange().createContextualFragment(NEW_DATA.html);
-                 document.querySelector(NEW_DATA.selector).innerHTML = '';
-                 document.querySelector(NEW_DATA.selector).appendChild(rangeHTML);
-
-
-                 console.log(rangeHTML)
+                document.querySelector(NEW_DATA.selector).innerHTML = '';
+                document.querySelector(NEW_DATA.selector).appendChild(rangeHTML);
             });
 
 

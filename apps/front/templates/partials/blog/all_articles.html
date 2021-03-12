@@ -9,16 +9,18 @@
     {% endfor %}
 </div>
 <ul class="pagination">
-      <li class="page-item disabled">
-            <a href="#" tabindex="-1">Previous</a>
+      <li class="page-item{% if pag == 1 %} disabled{% endif %}">
+            <a id="pag-previous" href="#">Previous</a>
       </li>
       <li class="page-item">
-            <a href="#">Next</a>
+            <a id="pag-next" href="#">Next</a>
       </li>
 </ul>
 
 <script>
-    const buttons = document.querySelectorAll('.btn');
+
+    // Open article
+    buttons = document.querySelectorAll('.btn');
 
     buttons.forEach((button) => {
         button.addEventListener('click', event => {
@@ -31,4 +33,34 @@
             }))
         });
     });
+
+    // Paginator
+    pagPrevious = document.querySelector('#pag-previous');
+    pagNext = document.querySelector('#pag-next');
+
+    pagPrevious.addEventListener('click', (event) => {
+        event.preventDefault();
+        document.$CHAT_SOCKET.send(JSON.stringify({
+            selector: "#main",
+            template: "partials/blog/all_articles.html",
+            data: {
+                pag: {% if pag > 1 %}{{ pag }} - 1{% else %}1{% endif %}
+            }
+        }))
+    });
+
+
+    pagNext.addEventListener('click', (event) => {
+        event.preventDefault();
+        document.$CHAT_SOCKET.send(JSON.stringify({
+            selector: "#main",
+            template: "partials/blog/all_articles.html",
+            data: {
+                pag: {{ pag }} + 1
+            }
+        }))
+    });
+
+
+
 </script>
