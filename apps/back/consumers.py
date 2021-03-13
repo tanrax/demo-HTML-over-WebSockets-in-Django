@@ -6,15 +6,12 @@ from apps.back.models import Post, Comment
 class BlogConsumer(WebsocketConsumer):
 
     def connect(self):
-        ''' Cliente se conecta '''
         self.accept()
 
     def disconnect(self, close_code):
-        ''' Cliente se desconecta '''
         pass
 
     def receive(self, text_data):
-        ''' Cliente envía información y nosotros la recibimos '''
         text_data_json = json.loads(text_data)
         selector = text_data_json["selector"]
         template = text_data_json["template"]

@@ -21,15 +21,6 @@ services:
       REDIS_URL: redis
     expose:
       - 8000
-    depends_on:
-      - redis
-
-  redis:
-    image: redis:alpine
-    restart: always
-    expose:
-      - 6379
-
 
   caddy:
     image: caddy:alpine

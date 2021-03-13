@@ -2,6 +2,8 @@
 
 Demonstration of how to build a real time application using HTML over WebSockets in Django 
 
+![demo](demo.gif)
+
 ## Article that inspired
 
 https://alistapart.com/article/the-future-of-web-software-is-html-over-websockets/
@@ -9,11 +11,11 @@ https://alistapart.com/article/the-future-of-web-software-is-html-over-websocket
 ## Run demo
 
 ``` bash
-docker-compose -f docker-compose.pro.yaml up -d
+docker-compose -f docker-compose.dev.yaml up -d
 ```
 
-## Develpment
+Open
 
 ``` bash
-docker-compose -f docker-compose.dev.yaml up -d
+my-demo.localhost
 ```

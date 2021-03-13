@@ -32,16 +32,13 @@
         <script>
             document.$CHAT_SOCKET = new WebSocket('ws://my-demo.localhost/ws/blog/{{ CHANNEL}}/');
 
-              // Conectado
              document.$CHAT_SOCKET.addEventListener('open', () => {
                  console.log('Connect');
              });
-             // Desconectado
              document.$CHAT_SOCKET.addEventListener('close', () => {
                   console.log('Disconnect');
               });
 
-             // Recibir mensaje y dibujar
              document.$CHAT_SOCKET.addEventListener('message', (event) => {
                 const NEW_DATA = JSON.parse(event.data);
                 const rangeHTML = document.createRange().createContextualFragment(NEW_DATA.html);
