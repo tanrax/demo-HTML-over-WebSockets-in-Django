@@ -1,7 +1,7 @@
 import json
 from channels.generic.websocket import WebsocketConsumer
 from django.template.loader import render_to_string
-from apps.back.models import Post
+from apps.back.models import Post, Comment
 
 class BlogConsumer(WebsocketConsumer):
 
@@ -31,6 +31,7 @@ class BlogConsumer(WebsocketConsumer):
 
         if template == "partials/blog/single.html":
             data["post"] = Post.objects.get(pk=data['id'])
+            data["comments"] = Comment.objects.filter(post__id=data['id']).all()
 
         # Send message to WebSocket
         self.send(

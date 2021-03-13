@@ -1,5 +1,23 @@
-<article>
-    <h1>{{ post.title }}</h1>
-    <h2>{{ post.author }}</h2>
-    <div>{{ post.content }}</div>
-</article>
+<div class="container grid-md">
+    <article>
+        <h1>{{ post.title }}</h1>
+        <h2>{{ post.author }}</h2>
+        <div>{{ post.content }}</div>
+    </article>
+    <section id="comments">
+        <hr>
+        <h3>Comments</h3>
+        {% for comment in comments %}
+        <div class="tile">
+           <div class="tile-icon">
+                <i class="icon icon-file centered"></i>
+            </div>
+            <div class="tile-content">
+                <p class="tile-title">{{ comment.name }}</p>
+                <p class="tile-subtitle">{{ comment.body }}</p>
+            </div>
+        </div>
+        <hr>
+        {% endfor %}
+    </section>
+</div>
