@@ -22,6 +22,12 @@ services:
     expose:
       - 8000
 
+  redis:
+    image: redis:alpine
+    restart: always
+    expose:
+      - 6379
+
   caddy:
     image: caddy:alpine
     restart: always
