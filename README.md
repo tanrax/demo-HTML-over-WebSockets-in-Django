@@ -2,7 +2,12 @@
 
 Demonstration of how to build a real time application using HTML over WebSockets in Django 
 
+
 ![demo](demo.gif)
+
+### Broadcast
+
+![demo v2](demo-v2.gif)
 
 ## Article that inspired
 
