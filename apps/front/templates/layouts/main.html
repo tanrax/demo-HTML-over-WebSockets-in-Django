@@ -30,7 +30,7 @@
             </main>
         </div>
         <script>
-            document.$CHAT_SOCKET = new WebSocket('ws://my-demo.localhost/ws/blog/{{ CHANNEL}}/');
+            document.$CHAT_SOCKET = new WebSocket('ws://{{ DOMAIN }}/ws/blog/{{ CHANNEL}}/');
 
              document.$CHAT_SOCKET.addEventListener('open', () => {
                  console.log('Connect');

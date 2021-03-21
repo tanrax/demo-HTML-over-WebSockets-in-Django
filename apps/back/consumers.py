@@ -27,8 +27,26 @@ class BlogConsumer(WebsocketConsumer):
             data['pag'] = pag
 
         if template == "partials/blog/single.html":
+            # Set data
             data["post"] = Post.objects.get(pk=data['id'])
-            data["comments"] = Comment.objects.filter(post__id=data['id']).all()
+            data["comments"] = Comment.objects.filter(post__id=data['id']).order_by("-created_on").all()
+            # Add new comment
+            data["newName"] = data['newName'] if 'newName' in data else ''
+            data["newMessage"] = data['newMessage'] if 'newMessage' in data else ''
+            newComment = 'newComment' in data
+            # Validation
+            error = (len(data["newName"]) == 0 or len(data["newMessage"]) == 0) and newComment
+            data["error"] = error
+            if newComment and not error:
+                # Insert
+                Comment(
+                    name=data["newName"],
+                    body=data["newMessage"],
+                    post=Post.objects.get(pk=data['id'])
+                ).save()
+                # Clean form
+                data["newName"] = ''
+                data["newMessage"] = ''
 
         # Send message to WebSocket
         self.send(

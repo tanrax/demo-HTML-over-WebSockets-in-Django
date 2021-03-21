@@ -7,8 +7,29 @@
     <section id="comments">
         <hr>
         <h3>Comments</h3>
+        {# Form add comment #} 
+        <form>
+            <div class="form-group">
+                <label class="form-label" for="new-name">Name</label>
+                <input class="form-input" type="text" id="new-name" placeholder="Name" value="{{ newName }}">
+            </div>
+            <div class="form-group">
+                <label class="form-label" for="new-message">Message</label>
+                <textarea class="form-input" id="new-message" placeholder="New message" rows="3">{{ newMessage }}</textarea>
+            </div>
+            <button data-id="{{ post.id }}" id="publish" class="btn">Publish</button>
+            {% if error %}
+            <div class="toast toast-error">
+                Fill in all fields
+            </div>
+            {% endif %}
+        </form>
+        <hr>
+        {# End Form add comment #} 
+
+        {# All comment #} 
         {% for comment in comments %}
-        <div class="tile">
+        <article class="tile">
            <div class="tile-icon">
                 <i class="icon icon-file centered"></i>
             </div>
@@ -16,8 +37,33 @@
                 <p class="tile-title">{{ comment.name }}</p>
                 <p class="tile-subtitle">{{ comment.body }}</p>
             </div>
-        </div>
+        </article>
         <hr>
         {% endfor %}
+        {# End All comment #} 
     </section>
 </div>
+
+<script>
+
+    // Open article
+    newName = document.querySelector('#new-name');
+    newMessage = document.querySelector('#new-message');
+    publish = document.querySelector('#publish');
+
+    publish.addEventListener('click', (event) => {
+        event.preventDefault();
+        document.$CHAT_SOCKET.send(JSON.stringify({
+            selector: "#main",
+            template: "partials/blog/single.html",
+            data: {
+                id: event.target.dataset.id,
+                newName: newName.value,
+                newMessage: newMessage.value,
+                newComment: true
+            }
+        }))
+
+    });
+
+</script>
