@@ -53,9 +53,11 @@
 
     publish.addEventListener('click', (event) => {
         event.preventDefault();
+
+        document.$CHAT_TEMPLATE = "partials/blog/single.html";
         document.$CHAT_SOCKET.send(JSON.stringify({
             selector: "#main",
-            template: "partials/blog/single.html",
+            template: document.$CHAT_TEMPLATE,
             data: {
                 id: event.target.dataset.id,
                 newName: newName.value,

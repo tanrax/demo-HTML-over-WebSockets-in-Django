@@ -40,19 +40,23 @@
               });
 
              document.$CHAT_SOCKET.addEventListener('message', (event) => {
+                console.log(event);
                 const NEW_DATA = JSON.parse(event.data);
-                const rangeHTML = document.createRange().createContextualFragment(NEW_DATA.html);
-                document.querySelector(NEW_DATA.selector).innerHTML = '';
-                document.querySelector(NEW_DATA.selector).appendChild(rangeHTML);
+                 if (NEW_DATA.template === document.$CHAT_TEMPLATE) {
+                    const rangeHTML = document.createRange().createContextualFragment(NEW_DATA.html);
+                    document.querySelector(NEW_DATA.selector).innerHTML = '';
+                    document.querySelector(NEW_DATA.selector).appendChild(rangeHTML);
+                 }
             });
 
 
             document.querySelector('#link-about').addEventListener('click', (event) => {
 
                 event.preventDefault();
+                document.$CHAT_TEMPLATE = "partials/website/about.html";
                 document.$CHAT_SOCKET.send(JSON.stringify({
                     selector: "#main",
-                    template: "partials/website/about.html",
+                    template: document.$CHAT_TEMPLATE,
                     data: {}
                 }));
              });
@@ -60,9 +64,11 @@
             document.querySelector('#link-all').addEventListener('click', (event) => {
 
                 event.preventDefault();
+
+                document.$CHAT_TEMPLATE = "partials/blog/all_articles.html";
                 document.$CHAT_SOCKET.send(JSON.stringify({
                     selector: "#main",
-                    template: "partials/blog/all_articles.html",
+                    template: document.$CHAT_TEMPLATE,
                     data: {}
                 }));
              });

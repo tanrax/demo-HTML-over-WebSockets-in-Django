@@ -24,9 +24,10 @@
 
     buttons.forEach((button) => {
         button.addEventListener('click', event => {
+            document.$CHAT_TEMPLATE = "partials/blog/single.html";
             document.$CHAT_SOCKET.send(JSON.stringify({
                 selector: "#main",
-                template: "partials/blog/single.html",
+                template: document.$CHAT_TEMPLATE,
                 data: {
                     id: event.target.dataset.id
                 }
@@ -40,9 +41,10 @@
 
     pagPrevious.addEventListener('click', (event) => {
         event.preventDefault();
+        document.$CHAT_TEMPLATE = "partials/blog/all_articles.html";
         document.$CHAT_SOCKET.send(JSON.stringify({
             selector: "#main",
-            template: "partials/blog/all_articles.html",
+            template: document.$CHAT_TEMPLATE,
             data: {
                 pag: {% if pag > 1 %}{{ pag }} - 1{% else %}1{% endif %}
             }
@@ -52,9 +54,10 @@
 
     pagNext.addEventListener('click', (event) => {
         event.preventDefault();
+        document.$CHAT_TEMPLATE = "partials/blog/all_articles.html";
         document.$CHAT_SOCKET.send(JSON.stringify({
             selector: "#main",
-            template: "partials/blog/all_articles.html",
+            template: document.$CHAT_TEMPLATE,
             data: {
                 pag: {{ pag }} + 1
             }
