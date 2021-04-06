@@ -15,9 +15,15 @@ https://alistapart.com/article/the-future-of-web-software-is-html-over-websocket
 
 ## Explanation
 
+### Spanish
+
 https://programadorwebvalencia.com/html-sobre-websockets/
 
 https://www.youtube.com/watch?v=02IjScPlDH0
+
+### English
+
+https://testdriven.io/blog/html-over-websockets/
 
 ## Run demo
 
